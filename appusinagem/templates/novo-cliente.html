@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Novo Cliente - Pro Usinagens{% endblock %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/servicos.css' %}">
+</head>
+<body>
+
+    <div class="content">
+        <h3>Novo Cliente</h3>
+
+        <div class="options">
+            <a href="{% url 'clientes' %}"><button class="new-service-btn">Voltar</button></a>
+        </div>
+
+        <form class="formservico" method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="id_nome">Nome:</label>
+                {{ form.nome }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_email">Email:</label>
+                {{ form.email }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_telefone">Telefone:</label>
+                {{ form.telefone }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_endereco">Endereço:</label>
+                {{ form.endereco }}
+            </div>
+
+            <div class="options3">
+                <button type="submit">Salvar Cliente</button>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>
+{% endblock %}

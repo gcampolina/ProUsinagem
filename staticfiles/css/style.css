@@ -1,0 +1,40 @@
+body {
+    margin: 0;
+    font-family: "Roboto Condensed", sans-serif;
+    text-transform: uppercase;
+    background-color: rgb(20, 20, 20);
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #333;
+    color: #fff;
+    padding: 15px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transform: translateX(0);
+    transition: transform 0.3s ease-in-out;
+}
+
+
+
+
+
+
+/* Conteúdo Principal */
+.content {
+    margin-left: 250px;
+    padding: 20px;
+    color: #fff;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+
+/* Botão Hamburger */
+
+
+

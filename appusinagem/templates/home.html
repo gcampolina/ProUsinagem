@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Início - Pro Usinagens{% endblock %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Usinagens</title>
+
+    <style>
+        .content {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            text-align: center;
+        }
+
+        @media screen and (max-width: 768px) {
+
+        .content img{
+            width: 100%;
+        }
+
+
+
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="content">
+
+
+        <img class="logopro" src="/media/logo.png" alt="Minha Imagem">
+
+
+
+    </div>
+
+
+    
+</body>
+</html>
+{% endblock %}

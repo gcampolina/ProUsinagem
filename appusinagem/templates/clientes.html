@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Clientes - Pro Usinagens{% endblock %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/servicos.css' %}">
+</head>
+<body>
+
+    <div class="content">
+        <h3>Clientes</h3>
+
+        <div class="search-form">
+            <input type="text" id="search-client" placeholder="Buscar cliente por nome...">
+        </div>
+        
+
+
+
+
+         <div class="options">
+        <a href="{% url 'novo-cliente' %}">
+            <button><i class="fa-solid fa-plus"></i> Novo Cliente</button>
+        </a>
+    </div>
+
+    
+
+    <div id="clientes-container">
+    {% for cliente in clientes %}
+        <div class="service-item">
+            <div class="service-details">
+                <p><strong>Nome:</strong> {{ cliente.nome }}</p>
+                <p><strong>Email:</strong> {{ cliente.email }}</p>
+                <p><strong>Telefone:</strong> {{ cliente.telefone }}</p>
+                <p><strong>Endereço:</strong> {{ cliente.endereco }}</p>
+            </div>
+            <div class="options2">
+                <a href="{% url 'editar_cliente' cliente.id %}">
+                    <button class="edit-service-btn">Editar</button>
+                </a>
+                <form action="{% url 'excluir_cliente' cliente.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-service-btn" onclick="return confirm('Deseja excluir este cliente?')">Excluir</button>
+                </form>
+            </div>
+        </div>
+    {% empty %}
+        <p>Nenhum cliente cadastrado.</p>
+    {% endfor %}
+</div>
+
+
+
+
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('search-client');
+    const container = document.getElementById('clientes-container');
+
+    input.addEventListener('input', () => {
+        fetch(`/clientes/?q=${encodeURIComponent(input.value)}`)
+            .then(response => response.text())
+            .then(html => {
+                // Aqui vamos extrair só a parte que interessa do HTML completo retornado
+                // Criar um container temporário pra pegar só o conteúdo da div clientes-container
+
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = html;
+                const newContent = tempDiv.querySelector('#clientes-container').innerHTML;
+
+                container.innerHTML = newContent;
+            });
+    });
+});
+</script>
+  
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>{% block title %}Pro Usinagens{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+</head>
+<body>
+
+    <div class="titleBar">
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+    </div>
+    <div class="sidebar" id="sidebar">
+        <h2>Pro Usinagens</h2>
+        <ul>
+            <li><a href="{% url 'home' %}" onclick="closeMenu()">Início</a></li>
+            <li><a href="{% url 'servicos' %}" onclick="closeMenu()">Serviços</a></li>
+            <li><a href="{% url 'agenda' %}" onclick="closeMenu()">Agenda</a></li>
+            <li><a href="{% url 'clientes' %}" onclick="closeMenu()">Clientes</a></li>
+        </ul>
+    </div>
+    
+
+        {% block content %}
+        <!-- Conteúdo específico será inserido aqui -->  
+        {% endblock %}
+        
+
+
+        <script>
+            // Função para alternar a visibilidade da sidebar
+            function toggleMenu() {
+                const sidebar = document.getElementById('sidebar');
+                sidebar.classList.toggle('active');
+            }
+        
+            // Função para fechar a sidebar
+            function closeMenu() {
+                const sidebar = document.getElementById('sidebar');
+                sidebar.classList.remove('active');
+            }
+        
+            // Fechar a sidebar ao clicar fora dela
+            window.addEventListener('click', function(event) {
+                const sidebar = document.getElementById('sidebar');
+                const hamburger = document.querySelector('.hamburger');
+                if (!sidebar.contains(event.target) && !hamburger.contains(event.target)) {
+                    closeMenu();
+                }
+            });
+        </script>
+</body>
+</html>

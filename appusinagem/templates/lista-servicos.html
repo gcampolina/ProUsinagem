@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Lista de Serviços - Pro Usinagens{% endblock %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/servicos.css' %}">
+</head>
+<body>
+
+    <div class="content">
+        <h3>Serviços Finalizados</h3>
+
+        <div class="options">
+            <a href="{% url 'servicos' %}"><button class="new-service-btn">Voltar</button></a>
+        </div>
+
+        {% if finalizados %}
+        <ul>
+        <div class="services-list">
+            {% for service in finalizados %}
+            <div class="service-item">
+                <div class="service-details">
+                    <p><strong>Contratante:</strong> {{ service.contratante }}</p>
+                                <p><strong>Serviço:</strong> {{ service.nome_servico }}</p>
+                                <p><strong>Detalhes:</strong> {{ service.detalhes }}</p>
+                                <p><strong>Criado em:</strong> {{ service.data_servico }}</p>
+                                <p><strong>Previsão de Entrega:</strong> {{ service.data_entrega }}</p>
+                                <p><strong>Contato:</strong> {{ service.contato }}</p>
+                                <p><strong>Valor Total:</strong> R$ {{ service.total }}</p>
+                </div>
+        
+                <div class="options2">
+                        {% csrf_token %}
+
+                        <a style="all:unset ;" href="{% url 'reativar-servico' service.id %}">
+                            <button type="submit" class="reactivate-service-btn">
+                                <i class="fa-solid fa-backward"></i> Reativar Serviço
+                            </button>
+                        </a>
+                        
+
+        
+                    <!-- Botão para excluir o serviço -->
+                    <form style="all: unset;" action="{% url 'excluir-servico' service.id %}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este serviço?');">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-service-btn">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </ul>
+            {% else %}
+            <p>Você não possui serviços finalizados.</p>
+            {% endif %}
+
+
+
+            
+     </div>
+        
+    
+
+
+     <script>
+        function excluirServico(servicoId) {
+            // Confirmar se o usuário realmente deseja excluir o serviço
+            if (confirm('Tem certeza que deseja excluir este serviço?')) {
+                // Enviar uma requisição AJAX para excluir o serviço
+                fetch(`/excluir-servico/${servicoId}/`, {
+                    method: 'POST',  // Utilizando POST para enviar a requisição
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',  // Adiciona o token CSRF para proteção
+                        'Content-Type': 'application/json',  // Para enviar como JSON
+                    },
+                    body: JSON.stringify({
+                        'id': servicoId,  // Envia o ID do serviço a ser excluído
+                    }),
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Recarregar a página após a exclusão (ou atualizar a lista de serviços)
+                        window.location.reload();
+                    } else {
+                        console.error('Falha ao excluir serviço:', response.statusText);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao excluir serviço:', error);
+                });
+            }
+        }
+    </script>
+    
+</body>
+</html>
+{% endblock %}

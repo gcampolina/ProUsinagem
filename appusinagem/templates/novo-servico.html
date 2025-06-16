@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Serviços - Pro Usinagens{% endblock %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/servicos.css' %}">
+</head>
+<body>
+
+    <div class="content">
+        <h3>Novo Serviço</h3>
+
+        <div class="options">
+            <a href="{% url 'servicos' %}"><button class="new-service-btn"> Voltar</button></a>
+        </div>
+        
+        
+        
+
+        <form class="formservico" method="POST">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="id_contratante">Cliente:</label>
+                {{ form.contratante }}
+            </div>
+
+                <label for="id_nome_servico">Serviço:</label>
+                {{ form.nome_servico }}
+            
+
+                <label for="id_detalhes">Detalhes:</label>
+                {{ form.detalhes }}
+
+            
+
+                <label for="id_data_servico">Data do Serviço:</label>
+                {{ form.data_servico }}
+
+
+                <label for="id_data_entrega">Data de Entrega:</label>
+                {{ form.data_entrega }}
+
+            
+
+                <label for="id_contato">Telefone para Contato:</label>
+                {{ form.contato }}
+
+
+                <label for="id_total">Valor Total:</label>
+                {{ form.total }}
+
+                <div class="options3">
+                    <button type="submit">Salvar Serviço</button>
+                </div>
+            
+
+        </form>
+        
+
+       
+
+
+
+
+    </div>
+
+
+    
+</body>
+</html>
+{% endblock %}

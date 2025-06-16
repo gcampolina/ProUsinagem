@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Serviços - Pro Usinagens{% endblock %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/servicos.css' %}">
+</head>
+<body>
+
+    <div class="content">
+        <h3>Serviços Ativos</h3>
+         <div class="search-form">
+            <input type="text" id="search-service" placeholder="Buscar serviço por nome do contratante...">
+        </div>
+
+    
+        <div class="options">
+            <a href="{% url 'novo-servico' %}"><button class="new-service-btn"><i class="fa-solid fa-plus"></i> Novo Serviço</button></a>
+            <a href="{% url 'lista-servicos' %}"><button class="new-service-btn"><i class="fa-solid fa-list"></i> Serviços Finalizados</button></a>
+        </div>
+    
+        <div id="servicos-container">
+        {% if servicos_ativos %}
+            <ul>
+                {% for service in servicos_ativos %}
+                    <li class="services-list">    
+                        <div class="service-item">
+                            <div class="service-details">
+                                <p><strong>Contratante:</strong> {{ service.contratante }}</p>
+                                <p><strong>Serviço:</strong> {{ service.nome_servico }}</p>
+                                <p><strong>Detalhes:</strong> {{ service.detalhes }}</p>
+                                <p><strong>Criado em:</strong> {{ service.data_servico }}</p>
+                                <p><strong>Previsão de Entrega:</strong> {{ service.data_entrega }}</p>
+                                <p><strong>Contato:</strong> {{ service.contato }}</p>
+                                <p><strong>Valor Total:</strong> R$ {{ service.total }}</p>
+                            </div>
+
+                            <div class="options2">
+                                <form style="all: unset;" action="{% url 'excluir-servico' service.id %}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este serviço?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="delete-service-btn">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+
+                                <a style="all: unset;" href="{% url 'editar-servico' service.id %}">
+                                    <button class="edit-service-btn">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
+                                </a>
+
+                                <a href="{% url 'finalizar-servico' service.id %}">
+                                    <button class="finish-service-btn"><i class="fa-solid fa-check"></i> Finalizar</button>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Você não possui serviço ativo.</p>
+        {% endif %}
+    </div>
+    </div>
+
+
+    <script>
+        function excluirServico(servicoId) {
+            // Confirmar se o usuário realmente deseja excluir o serviço
+            if (confirm('Tem certeza que deseja excluir este serviço?')) {
+                // Enviar uma requisição AJAX para excluir o serviço
+                fetch(`/excluir-servico/${servicoId}/`, {
+                    method: 'POST',  // Utilizando POST para enviar a requisição
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',  // Adiciona o token CSRF para proteção
+                    },
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Recarregar a página após a exclusão (ou você pode atualizar a lista de serviços sem recarregar a página)
+                        window.location.reload();
+                    } else {
+                        console.error('Falha ao excluir serviço:', response.statusText);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao excluir serviço:', error);
+                });
+            }
+        }
+    </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('search-service');
+    const container = document.getElementById('servicos-container');
+
+    input.addEventListener('input', () => {
+        fetch(`/servicos/?q=${encodeURIComponent(input.value)}`)
+            .then(response => response.text())
+            .then(html => {
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = html;
+                const newContent = tempDiv.querySelector('#servicos-container').innerHTML;
+                container.innerHTML = newContent;
+            })
+            .catch(err => console.error('Erro ao buscar serviços:', err));
+    });
+});
+</script>
+
+
+</body>
+</html>
+{% endblock %}
