@@ -29,9 +29,6 @@ def servicos(request):
 
 
 
-def novoservico(request):
-    return render(request, 'novo-servico.html')
-
 
 def agenda(request):
     return render(request, 'agenda.html')
@@ -84,40 +81,54 @@ def excluir_cliente(request, cliente_id):
 
 
 
+
 def novoservico(request):
     if request.method == 'POST':
-        form = ServiceForm(request.POST)
+        form = ServiceForm(request.POST, request.FILES)
         if form.is_valid():
-            # Lógica de salvamento manual
-            contratante = form.cleaned_data['contratante']
-            nome_servico = form.cleaned_data['nome_servico']
-            detalhes = form.cleaned_data['detalhes']
-            data_servico = form.cleaned_data['data_servico']
-            data_entrega = form.cleaned_data['data_entrega']
-            contato = form.cleaned_data['contato']
-            total = form.cleaned_data['total']
-
-            
-
-            # Crie o objeto Pedido
-            servico = Service.objects.create(
-                contratante=contratante,
-                nome_servico=nome_servico,
-                detalhes=detalhes,
-                data_servico=data_servico,
-                data_entrega=data_entrega,
-                contato=contato,
-                total=total,
-            )
-                
+            form.save()  # Salva o objeto incluindo a imagem automaticamente
             messages.success(request, 'Serviço adicionado com sucesso!')
             return redirect('servicos')
-
-
     else:
         form = ServiceForm()
 
     return render(request, 'novo-servico.html', {'form': form})
+
+# def novoservico(request):
+#     if request.method == 'POST':
+#         form = ServiceForm(request.POST)
+#         if form.is_valid():
+#             # Lógica de salvamento manual
+#             contratante = form.cleaned_data['contratante']
+#             nome_servico = form.cleaned_data['nome_servico']
+#             detalhes = form.cleaned_data['detalhes']
+#             data_servico = form.cleaned_data['data_servico']
+#             data_entrega = form.cleaned_data['data_entrega']
+#             contato = form.cleaned_data['contato']
+#             total = form.cleaned_data['total']
+#             imagem = form.cleaned_data.get('imagem')
+            
+
+#             # Crie o objeto Pedido
+#             servico = Service.objects.create(
+#                 contratante=contratante,
+#                 nome_servico=nome_servico,
+#                 detalhes=detalhes,
+#                 data_servico=data_servico,
+#                 data_entrega=data_entrega,
+#                 contato=contato,
+#                 total=total,
+#                 imagem=imagem,
+#             )
+                
+#             messages.success(request, 'Serviço adicionado com sucesso!')
+#             return redirect('servicos')
+
+
+#     else:
+#         form = ServiceForm()
+
+#     return render(request, 'novo-servico.html', {'form': form})
 
 
 
@@ -147,34 +158,50 @@ def excluir_servico(request, service_id):
     return redirect('servicos')
 
 
+# def editar_servico(request, service_id):
+#     service = get_object_or_404(Service, id=service_id)
+
+#     if request.method == 'POST':
+#         # Preenche o formulário com os dados do POST
+#         form = ServiceForm(request.POST)
+#         if form.is_valid():
+#             # Salva as alterações manualmente no banco de dados
+#             service.contratante = form.cleaned_data['contratante']
+#             service.nome_servico = form.cleaned_data['nome_servico']
+#             service.detalhes = form.cleaned_data['detalhes']
+#             service.data_servico = form.cleaned_data['data_servico']
+#             service.data_entrega = form.cleaned_data['data_entrega']
+#             service.contato = form.cleaned_data['contato']
+#             service.total = form.cleaned_data['total']
+#             service.save()
+#             return redirect('servicos')  # Redireciona para a página de serviços
+#     else:
+#         # Preenche o formulário com os dados existentes do serviço
+#         initial_data = {
+#             'contratante': service.contratante,
+#             'nome_servico': service.nome_servico,
+#             'detalhes': service.detalhes,
+#             'data_servico': service.data_servico.strftime('%Y-%m-%d'),
+#             'data_entrega': service.data_entrega.strftime('%Y-%m-%d'),
+#             'contato': service.contato,
+#             'total': service.total,
+#         }
+#         form = ServiceForm(initial=initial_data)
+
+#     return render(request, 'novo-servico.html', {'form': form})
 def editar_servico(request, service_id):
     service = get_object_or_404(Service, id=service_id)
 
     if request.method == 'POST':
-        # Preenche o formulário com os dados do POST
-        form = ServiceForm(request.POST)
+        form = ServiceForm(request.POST, request.FILES, instance=service)
         if form.is_valid():
-            # Salva as alterações manualmente no banco de dados
-            service.contratante = form.cleaned_data['contratante']
-            service.nome_servico = form.cleaned_data['nome_servico']
-            service.detalhes = form.cleaned_data['detalhes']
-            service.data_servico = form.cleaned_data['data_servico']
-            service.data_entrega = form.cleaned_data['data_entrega']
-            service.contato = form.cleaned_data['contato']
-            service.total = form.cleaned_data['total']
-            service.save()
-            return redirect('servicos')  # Redireciona para a página de serviços
+            form.save()
+            messages.success(request, 'Serviço atualizado com sucesso!')
+            return redirect('servicos')
     else:
-        # Preenche o formulário com os dados existentes do serviço
-        initial_data = {
-            'contratante': service.contratante,
-            'nome_servico': service.nome_servico,
-            'detalhes': service.detalhes,
-            'data_servico': service.data_servico.strftime('%Y-%m-%d'),
-            'data_entrega': service.data_entrega.strftime('%Y-%m-%d'),
-            'contato': service.contato,
-            'total': service.total,
-        }
-        form = ServiceForm(initial=initial_data)
+        form = ServiceForm(instance=service, initial={
+            'data_servico': service.data_servico.strftime('%Y-%m-%d') if service.data_servico else '',
+            'data_entrega': service.data_entrega.strftime('%Y-%m-%d') if service.data_entrega else '',
+        })
 
-    return render(request, 'novo-servico.html', {'form': form})
+    return render(request, 'novo-servico.html', {'form': form, 'service': service})

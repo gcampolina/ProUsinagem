@@ -25,7 +25,7 @@
         
         
 
-        <form class="formservico" method="POST">
+        <form class="formservico" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             
             <div class="form-group">
@@ -58,6 +58,25 @@
                 <label for="id_total">Valor Total:</label>
                 {{ form.total }}
 
+
+
+
+                <label for="id_imagem">Imagem do Serviço Atual:</label>
+
+<div class="imagem-preview">
+    {% if service.imagem %}
+        <img src="{{ service.imagem.url }}" alt="Imagem do serviço" width="400" />
+        
+    {% endif %}
+</div>
+            <div class="imagem-container">
+    <!-- Input file -->
+    {{ form.imagem }}
+
+</div>
+
+
+
                 <div class="options3">
                     <button type="submit">Salvar Serviço</button>
                 </div>
@@ -72,6 +91,45 @@
 
 
     </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const limparBtn = document.getElementById('limpar-imagem-btn');
+        const inputImagem = document.getElementById('id_imagem');
+
+        // Esconde o texto "Atualmente:" e o link da imagem
+        const atualmenteText = Array.from(document.querySelectorAll('p'))
+            .find(p => p.textContent.trim().toLowerCase().startsWith('atualmente:'));
+        if (atualmenteText) {
+            atualmenteText.style.display = 'none';
+        }
+
+        // Esconde o label "Limpar" e a checkbox padrão do Django
+        const allLabels = document.querySelectorAll('label');
+        allLabels.forEach(label => {
+            if (label.textContent.trim().toLowerCase().includes('limpar')) {
+                label.style.display = 'none';
+            }
+        });
+
+        const clearCheckbox = document.querySelector('input[type="checkbox"][name$="-clear"]');
+        if (clearCheckbox) {
+            clearCheckbox.style.display = 'none';
+        }
+
+        // Limpar a imagem quando clicar no botão
+        limparBtn.addEventListener('click', function () {
+            inputImagem.value = '';
+            if (clearCheckbox) {
+                clearCheckbox.checked = true;
+            }
+        });
+    });
+</script>
+
+
+
+
 
 
     
