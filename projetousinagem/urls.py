@@ -23,4 +23,6 @@ urlpatterns = [
     path('excluir-cliente/<int:cliente_id>/', views.excluir_cliente, name='excluir_cliente'),
 ]
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
