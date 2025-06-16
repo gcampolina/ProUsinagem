@@ -151,19 +151,6 @@ ul {
     max-width: 300px;
 }
 
-#limpar-imagem-btn {
-    background-color: #d9534f;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    width: fit-content;
-}
-
-#limpar-imagem-btn:hover {
-    background-color: #c9302c;
-}
 
 
 
@@ -189,7 +176,10 @@ ul {
         gap: 20px;
  
     }
-
+    
+    .imagem-preview img {
+        width: 100%;
+}
 
     .service-details span {
         text-align: left;
